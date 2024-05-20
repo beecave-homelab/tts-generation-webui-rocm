@@ -36,10 +36,10 @@ RUN node --version \
 # Set working directory to the cloned repo
 # Install all requirements
 WORKDIR /app
-RUN git clone https://github.com/beecave-homelab/tts-generation-webui-rocm.git \
-    && git checkout rocm-6.0
+RUN git clone https://github.com/beecave-homelab/tts-generation-webui-rocm.git
 WORKDIR /app/tts-generation-webui
-RUN pip3 install --upgrade pip setuptools \
+RUN git checkout rocm-6.0 \
+    && pip3 install --upgrade pip setuptools \
     && pip3 install -r requirements.txt --no-cache-dir \
     && pip3 install -r requirements_audiocraft_only.txt --no-deps \
     && pip3 install -r requirements_audiocraft_deps.txt --no-cache-dir \

@@ -36,7 +36,8 @@ RUN node --version \
 # Set working directory to the cloned repo
 # Install all requirements
 WORKDIR /app
-RUN git clone https://github.com/rsxdalv/tts-generation-webui.git
+RUN git clone https://github.com/beecave-homelab/tts-generation-webui-rocm.git \
+    && git checkout rocm-6.0
 WORKDIR /app/tts-generation-webui
 RUN pip3 install --upgrade pip setuptools \
     && pip3 install -r requirements.txt --no-cache-dir \

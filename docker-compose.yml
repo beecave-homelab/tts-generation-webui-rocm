@@ -1,17 +1,19 @@
-version: '3'
 services:
   tts-generation-webui:
-    image: "ghcr.io/rsxdalv/tts-generation-webui:main"
+    build:
+      context: .
+      dockerfile: Dockerfile-amd
+    image: tts-generation-webui:rocm-pytorch-6.0.2
+    
     restart: unless-stopped
     ports:
       - "7860:7860"
-      # include React UI
       - "3000:3000"
     container_name: tts-generation-webui
-    deploy:
-        resources:
-          reservations:
-            devices:
-              - driver: nvidia
-                device_ids: ['0']
-                capabilities: [gpu]
+    devices:
+      - "/dev/kfd:/dev/kfd"
+      - "/dev/dri:/dev/dri"
+    security_opt:
+      - seccomp=unconfined
+    group_add:
+      - video

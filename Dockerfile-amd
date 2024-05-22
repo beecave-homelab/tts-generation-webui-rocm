@@ -1,7 +1,7 @@
 ######################################################
 ### SETUP FOR AMD GPU DOCKER IMAGE ON UBUNTU 22.04 ###
 ######################################################
-FROM ubuntu:22.04 AS rocm
+FROM ubuntu:20.04 AS rocm
 
 # Set arguments
 ARG ROCM_VERSION=6.0

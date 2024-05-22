@@ -1,0 +1,341 @@
+
+--boundary_.oOo._SHM8715svGsfX30dai6YVRIsMb7dDHxf
+Content-Length: 201
+Content-Type: application/octet-stream
+X-File-MD5: 6df4b89bc90a0550e9d769c2c712b0ca
+X-File-Mtime: 1716397128
+X-File-Path: /Projects/tts-generation-webui-rocm/.git/logs/refs/remotes/origin/HEAD
+
+0000000000000000000000000000000000000000 5346ac362e4be4a7704ef418bd130f890c3f2731 elvee <lowie@beecave.nl> 1716397128 +0200	clone: from https://github.com/beecave-homelab/tts-generation-webui-rocm.git
+
+--boundary_.oOo._SHM8715svGsfX30dai6YVRIsMb7dDHxf
+Content-Length: 3161
+Content-Type: application/octet-stream
+X-File-MD5: ffc0d7de0a8b09fba5e88b417fa6dfbb
+X-File-Mtime: 1716397128
+X-File-Path: /Projects/tts-generation-webui-rocm/notebooks/google_collab.ipynb
+
+{
+  "cells": [
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "Omt6xz6ljwIR",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Omt6xz6ljwIR",
+        "outputId": "89fb352e-84a8-4d3e-b0dc-28ee9d9a3e6e"
+      },
+      "outputs": [],
+      "source": [
+        "!git clone https://github.com/rsxdalv/tts-generation-webui\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "a66bf3c4",
+      "metadata": {},
+      "outputs": [],
+      "source": [
+        "import os\n",
+        "os.chdir(\"./tts-generation-webui\")"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "c1c0ce06",
+      "metadata": {},
+      "outputs": [],
+      "source": [
+        "# Get latest Node.js\n",
+        "!wget https://nodejs.org/dist/v21.6.0/node-v21.6.0-linux-x64.tar.gz \n",
+        "!tar xvfz node-v21.6.0-linux-x64.tar.gz \n",
+        "!cp -r node-v21.6.0-linux-x64/* /usr/local/"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "HULYvnXTjzZX",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "HULYvnXTjzZX",
+        "outputId": "56cd665f-a6b5-4565-ddbc-7c59053d4e4b"
+      },
+      "outputs": [],
+      "source": [
+        "# Run install/updates\n",
+        "!git pull\n",
+        "!pip install -r requirements.txt\n",
+        "!python update.py"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "203e8384",
+      "metadata": {},
+      "outputs": [],
+      "source": [
+        "# Fix for deepspeed for tortoise\n",
+        "# pip uninstall deepspeed\n",
+        "# pip install deepspeed==0.8.3"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "7726b943",
+      "metadata": {},
+      "outputs": [],
+      "source": [
+        "# Fix torchvision for MusicGen \n",
+        "# !pip install torchvision==0.15.0+cu117 --extra-index-url https://download.pytorch.org/whl/cu117"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "r0FihjXLklZG",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "r0FihjXLklZG",
+        "outputId": "77b5030b-2d12-4c20-ab0d-970b53b9ac08"
+      },
+      "outputs": [],
+      "source": [
+        "!python server.py --share\n",
+        "# Note - Node.js/React UI works but isn't accesssible by default on Google Colab, only gradio is easy to open."
+      ]
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    },
+    "language_info": {
+      "codemirror_mode": {
+        "name": "ipython",
+        "version": 3
+      },
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "nbconvert_exporter": "python",
+      "pygments_lexer": "ipython3",
+      "version": "3.10.11"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
+
+--boundary_.oOo._SHM8715svGsfX30dai6YVRIsMb7dDHxf
+Content-Length: 0
+Content-Type: application/octet-stream
+X-File-MD5: d41d8cd98f00b204e9800998ecf8427e
+X-File-Mtime: 1716397128
+X-File-Path: /Projects/tts-generation-webui-rocm/outputs-rvc/.gitkeep
+
+
+--boundary_.oOo._SHM8715svGsfX30dai6YVRIsMb7dDHxf
+Content-Length: 0
+Content-Type: application/octet-stream
+X-File-MD5: d41d8cd98f00b204e9800998ecf8427e
+X-File-Mtime: 1716397128
+X-File-Path: /Projects/tts-generation-webui-rocm/data/models/magnet/.gitkeep
+
+
+--boundary_.oOo._SHM8715svGsfX30dai6YVRIsMb7dDHxf
+Content-Length: 0
+Content-Type: application/octet-stream
+X-File-MD5: d41d8cd98f00b204e9800998ecf8427e
+X-File-Mtime: 1716397128
+X-File-Path: /Projects/tts-generation-webui-rocm/data/models/rvc/checkpoints/.gitkeep
+
+
+--boundary_.oOo._SHM8715svGsfX30dai6YVRIsMb7dDHxf
+Content-Length: 429
+Content-Type: application/octet-stream
+X-File-MD5: fb5dbd7564213828e66fe0f91b8e5c21
+X-File-Mtime: 1716397128
+X-File-Path: /Projects/tts-generation-webui-rocm/react-ui/.augmentignore
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# vscode
+.vscode
+
+# upload cache
+/public/file-input-cache/
+
+
+--boundary_.oOo._SHM8715svGsfX30dai6YVRIsMb7dDHxf
+Content-Length: 50
+Content-Type: application/octet-stream
+X-File-MD5: f5a914cad3a528f40aa4a1dbcefb6b9d
+X-File-Mtime: 1716397128
+X-File-Path: /Projects/tts-generation-webui-rocm/react-ui/.eslintrc
+
+{
+  "extends": ["next", "next/core-web-vitals"]
+}
+
+--boundary_.oOo._SHM8715svGsfX30dai6YVRIsMb7dDHxf
+Content-Length: 115
+Content-Type: application/octet-stream
+X-File-MD5: cb9a10e14f04357d6f524839ace329a3
+X-File-Mtime: 1716397128
+X-File-Path: /Projects/tts-generation-webui-rocm/react-ui/.eslintrc.json
+
+{
+  "extends": "next/core-web-vitals",
+  "rules": {
+    // Other rules
+    "@next/next/no-img-element": "off"
+  }
+}
+--boundary_.oOo._SHM8715svGsfX30dai6YVRIsMb7dDHxf
+Content-Length: 429
+Content-Type: application/octet-stream
+X-File-MD5: fb5dbd7564213828e66fe0f91b8e5c21
+X-File-Mtime: 1716397128
+X-File-Path: /Projects/tts-generation-webui-rocm/react-ui/.gitignore
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# vscode
+.vscode
+
+# upload cache
+/public/file-input-cache/
+
+
+--boundary_.oOo._SHM8715svGsfX30dai6YVRIsMb7dDHxf
+Content-Length: 965
+Content-Type: application/octet-stream
+X-File-MD5: 953e98ab6fb92fb6c077409271bf1e52
+X-File-Mtime: 1716397128
+X-File-Path: /Projects/tts-generation-webui-rocm/react-ui/next.config.js
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // webpack(config) {
+  //   // Grab the existing rule that handles SVG imports
+  //   const fileLoaderRule = config.module.rules.find((rule) =>
+  //     rule.test?.test?.('.svg'),
+  //   )
+
+  //   config.module.rules.push(
+  //     // Reapply the existing rule, but only for svg imports ending in ?url
+  //     {
+  //       ...fileLoaderRule,
+  //       test: /\.svg$/i,
+  //       resourceQuery: /url/, // *.svg?url
+  //     },
+  //     // Convert all other *.svg imports to React components
+  //     {
+  //       test: /\.svg$/i,
+  //       issuer: /\.[jt]sx?$/,
+  //       resourceQuery: { not: /url/ }, // exclude if *.svg?url
+  //       use: ['@svgr/webpack'],
+  //     },
+  //   )
+
+  //   // Modify the file loader rule to ignore *.svg, since we have it handled now.
+  //   fileLoaderRule.exclude = /\.svg$/i
+
+  //   return config
+  // },
+  reactStrictMode: true,
+}
+
+module.exports = nextConfig
+
+--boundary_.oOo._SHM8715svGsfX30dai6YVRIsMb7dDHxf
+Content-Length: 1068
+Content-Type: application/octet-stream
+X-File-MD5: 19247afa79be5643f4b328dc81a299b1
+X-File-Mtime: 1716397128
+X-File-Path: /Proje

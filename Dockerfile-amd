@@ -6,7 +6,7 @@ FROM ubuntu:20.04 AS rocm
 # Set arguments
 ARG ROCM_VERSION=6.0
 ARG AMDGPU_VERSION=6.0
-ARG TORCH_VERSION=2.1.2
+ARG TORCH_VERSION=2.3.0
 
 # Install necessary packages and add ROCm and AMDGPU repositories
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -34,5 +34,7 @@ USER rocm-user
 WORKDIR /home/rocm-user
 ENV PATH="${PATH}:/opt/rocm/bin"
 
-# Setup virtual environment and install Python packages
-RUN pip3 install --pre torch=={TORCH_VERSION} torchaudio=={TORCH_VERSION} --index-url https://download.pytorch.org/whl/nightly/rocm${ROCM_VERSION} --no-cache-dir
+# Install and setup pytorch
+RUN sudo apt install python3-pip -y \
+    && pip3 install --upgrade pip wheel \
+    && pip3 install torch==${TORCH_VERSION} torchaudio==${TORCH_VERSION} --index-url https://download.pytorch.org/whl/rocm${ROCM_VERSION}

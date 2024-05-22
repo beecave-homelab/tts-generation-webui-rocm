@@ -1,7 +1,7 @@
 ######################################################
 ### SETUP FOR AMD GPU DOCKER IMAGE ON UBUNTU 22.04 ###
 ######################################################
-FROM ubuntu:20.04 AS rocm
+FROM ubuntu:22.04 AS rocm
 
 # Set arguments
 ARG ROCM_VERSION=6.0
@@ -14,7 +14,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     && mkdir -p /etc/apt/keyrings \
     && curl -fsSL http://repo.radeon.com/rocm/rocm.gpg.key | gpg --dearmor -o /etc/apt/keyrings/rocm-archive-keyring.gpg \
     && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm-archive-keyring.gpg] http://repo.radeon.com/rocm/apt/${ROCM_VERSION}/ ubuntu main" | tee /etc/apt/sources.list.d/rocm.list \
-    && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm-archive-keyring.gpg] https://repo.radeon.com/amdgpu/${AMDGPU_VERSION}/ubuntu focal main" | tee /etc/apt/sources.list.d/amdgpu.list \
+    && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm-archive-keyring.gpg] https://repo.radeon.com/amdgpu/${AMDGPU_VERSION}/ubuntu jammy main" | tee /etc/apt/sources.list.d/amdgpu.list \
     && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     sudo libelf1 libnuma-dev build-essential git vim-nox cmake-curses-gui kmod file python3 python3-pip rocm-dev \
     && apt-get clean \
@@ -35,6 +35,6 @@ WORKDIR /home/rocm-user
 ENV PATH="${PATH}:/opt/rocm/bin"
 
 # Install and setup pytorch
-RUN sudo apt install python3-pip -y \
+RUN sudo apt install python3.10 python3-pip -y \
     && pip3 install --upgrade pip wheel \
     && pip3 install torch==${TORCH_VERSION} torchaudio==${TORCH_VERSION} --index-url https://download.pytorch.org/whl/rocm${ROCM_VERSION}

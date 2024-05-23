@@ -1,34 +1,12 @@
-######################################################
-### SETUP FOR AMD GPU DOCKER IMAGE ON UBUNTU 22.04 ###
-######################################################
-FROM ubuntu:22.04 AS rocm
-
-# Set arguments
-ARG ROCM_VERSION=5.7
-ARG AMDGPU_VERSION=5.7
-ARG TORCH_VERSION=2.3.0
-
-# Install necessary packages and add ROCm and AMDGPU repositories
-ARG APT_PREF 
-RUN echo "$APT_PREF" > /etc/apt/preferences.d/rocm-pin-600
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates curl libnuma-dev gnupg \
-    && curl -sL https://repo.radeon.com/rocm/rocm.gpg.key | apt-key add - \
-    && printf "deb [arch=amd64] https://repo.radeon.com/rocm/apt/$ROCM_VERSION/ jammy main" | tee /etc/apt/sources.list.d/rocm.list \
-    && printf "deb [arch=amd64] https://repo.radeon.com/amdgpu/$AMDGPU_VERSION/ubuntu jammy main" | tee /etc/apt/sources.list.d/amdgpu.list \
-    && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    sudo \
-    libelf1 \
-    kmod \
-    file \
-    rocm-dev \
-    build-essential && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
 ####################################################    
 ########### SETUP PYTORCH AND LOCAL USER ###########
 ####################################################
-FROM rocm AS rocm-pytorch
+FROM rocm/dev-ubuntu-22.04:6.1.1-complete AS rocm-pytorch
+
+# Set arguments
+ARG ROCM_VERSION=6.0
+ARG AMDGPU_VERSION=6.0
+ARG TORCH_VERSION=2.1.2
 
 # Copy sudoers file for passwordless sudo
 # Create rocm-user

@@ -19,10 +19,10 @@ ENV PATH="${PATH}:/opt/rocm/bin"
 
 # Install python3.10 and setup pytorch
 RUN sudo apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    && sudo apt install software-properties-common -y \
+    software-properties-common \
     && sudo add-apt-repository ppa:deadsnakes/ppa \
-    && sudo apt update -y \
-    && sudo apt install python3.10 python3.10-venv python3.10-dev \
+    && sudo apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \ 
+    python3.10 python3.10-venv python3.10-dev \
     && sudo rm /usr/bin/python3 \
     && sudo ln -s python3.10 /usr/bin/python3 \
     && curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 \

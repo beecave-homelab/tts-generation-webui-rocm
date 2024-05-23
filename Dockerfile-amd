@@ -18,12 +18,11 @@ WORKDIR /home/rocm-user
 ENV PATH="${PATH}:/opt/rocm/bin"
 
 # Install necessary packages
-RUN sudo apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    curl sudo libelf1 libnuma-dev build-essential git
+RUN sudo apt update -y && sudo DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
+    curl sudo libelf1 libnuma-dev build-essential git software-properties-common
 
 # Install python3.10 and setup pytorch
-RUN sudo apt-get update -y \
-    && sudo apt install software-properties-common -y \
+RUN sudo apt update -y \
     && sudo add-apt-repository ppa:deadsnakes/ppa \
     && sudo apt update -y \
     && sudo apt install python3.10 python3.10-venv python3.10-dev \
@@ -32,7 +31,7 @@ RUN sudo apt-get update -y \
     && curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 \
     && pip3 install --upgrade pip wheel \
     && pip3 install torch==${TORCH_VERSION} torchaudio==${TORCH_VERSION} --index-url https://download.pytorch.org/whl/rocm${ROCM_VERSION} --no-cache-dir \
-    && sudo apt-get clean \
+    && sudo apt clean \
     && sudo rm -rf /var/lib/apt/lists/*
 
 

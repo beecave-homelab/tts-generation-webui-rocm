@@ -7,16 +7,23 @@ FROM ubuntu:22.04 AS rocm
 ARG ROCM_VERSION=6.1.1
 ARG AMDGPU_VERSION=6.1.1
 ARG TORCH_VERSION=2.3.0
-ENV UNAME="$(uname -r)"
 
 # Install necessary packages and add ROCm and AMDGPU repositories
-RUN apt install -y "linux-headers-${UNAME}" "linux-modules-extra-${UNAME}" \
-    && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    wget ca-certificates curl gnupg sudo libelf1 libnuma-dev build-essential git vim-nox cmake-curses-gui kmod file \
-    && wget https://repo.radeon.com/amdgpu-install/${AMDGPU_VERSION}/ubuntu/jammy/amdgpu-install_6.1.60101-1_all.deb \
-    && apt install ./amdgpu-install_6.1.60101-1_all.deb -y \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+ARG APT_PREF
+RUN echo "$APT_PREF" > /etc/apt/preferences.d/rocm-pin-600
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates curl libnuma-dev gnupg \
+  && curl -sL https://repo.radeon.com/rocm/rocm.gpg.key | apt-key add - \
+  && printf "deb [arch=amd64] https://repo.radeon.com/rocm/apt/$ROCM_VERSION/ jammy main" | tee /etc/apt/sources.list.d/rocm.list \
+  && printf "deb [arch=amd64] https://repo.radeon.com/amdgpu/$AMDGPU_VERSION/ubuntu jammy main" | tee /etc/apt/sources.list.d/amdgpu.list \
+  && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+  sudo \
+  libelf1 \
+  kmod \
+  file \
+  rocm-dev \
+  build-essential && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
 
 ####################################################    
 ########### SETUP PYTORCH AND LOCAL USER ###########

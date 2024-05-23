@@ -10,7 +10,8 @@ ARG TORCH_VERSION=2.3.0
 
 # Install necessary packages and add ROCm and AMDGPU repositories
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    "linux-headers-$(uname -r)" "linux-modules-extra-$(uname -r)" wget ca-certificates curl gnupg sudo libelf1 libnuma-dev build-essential git vim-nox cmake-curses-gui kmod file \
+    "linux-headers-$(uname -r)" "linux-modules-extra-$(uname -r)" \
+    wget ca-certificates curl gnupg sudo libelf1 libnuma-dev build-essential git vim-nox cmake-curses-gui kmod file \
     && wget https://repo.radeon.com/amdgpu-install/${AMDGPU_VERSION}/ubuntu/jammy/amdgpu-install_6.1.60101-1_all.deb \
     && apt install ./amdgpu-install_6.1.60101-1_all.deb -y \
     && apt-get clean \

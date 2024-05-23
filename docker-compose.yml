@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-amd
-    image: tts-generation-webui:rocm-pytorch-6.0.2
+    image: tts-generation-webui:rocm-6.0-pytorch-2.3.0
     
     restart: unless-stopped
     ports:

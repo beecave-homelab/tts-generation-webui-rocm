@@ -7,7 +7,7 @@ FROM ubuntu:22.04 AS rocm
 ARG ROCM_VERSION=6.1.1
 ARG AMDGPU_VERSION=6.1.1
 ARG TORCH_VERSION=2.3.0
-ENV UNAME=$(uname -r)
+ENV UNAME="$(uname -r)"
 
 # Install necessary packages and add ROCm and AMDGPU repositories
 RUN apt install -y "linux-headers-${UNAME}" "linux-modules-extra-${UNAME}" \

@@ -11,10 +11,13 @@ ARG TORCH_VERSION=2.3.0
 # Install necessary packages and add ROCm and AMDGPU repositories
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     ca-certificates curl gnupg \
-    && mkdir -p /etc/apt/keyrings \
-    && curl -fsSL http://repo.radeon.com/rocm/rocm.gpg.key | gpg --dearmor -o /etc/apt/keyrings/rocm-archive-keyring.gpg \
-    && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm-archive-keyring.gpg] http://repo.radeon.com/rocm/apt/${ROCM_VERSION}/ ubuntu main" | tee /etc/apt/sources.list.d/rocm.list \
-    && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm-archive-keyring.gpg] https://repo.radeon.com/amdgpu/${AMDGPU_VERSION}/ubuntu jammy main" | tee /etc/apt/sources.list.d/amdgpu.list \
+    && mkdir --parents --mode=0755 /etc/apt/keyrings \
+    && wget https://repo.radeon.com/rocm/rocm.gpg.key -O - | gpg --dearmor | sudo tee /etc/apt/keyrings/rocm.gpg > /dev/null \
+    && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/${AMDGPU_VERSION}/ubuntu jammy main" | sudo tee /etc/apt/sources.list.d/amdgpu.list \
+    && apt update -y \
+    && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/${AMDGPU_VERSION} jammy main" | sudo tee --append /etc/apt/sources.list.d/rocm.list \
+    && echo -e 'Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600' | sudo tee /etc/apt/preferences.d/rocm-pin-600 \
+    && apt update -y \
     && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     sudo libelf1 libnuma-dev build-essential git vim-nox cmake-curses-gui kmod file python3 python3-pip rocm-dev \
     && apt-get clean \

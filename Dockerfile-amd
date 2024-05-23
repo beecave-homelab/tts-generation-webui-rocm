@@ -19,10 +19,11 @@ ENV PATH="${PATH}:/opt/rocm/bin"
 
 # Install necessary packages
 RUN sudo apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    curl sudo libelf1 libnuma-dev build-essential git software-properties-common
+    curl sudo libelf1 libnuma-dev build-essential git
 
 # Install python3.10 and setup pytorch
 RUN sudo apt-get update -y \
+    && sudo apt install software-properties-common -y \
     && sudo add-apt-repository ppa:deadsnakes/ppa \
     && sudo apt update -y \
     && sudo apt install python3.10 python3.10-venv python3.10-dev \

@@ -1,0 +1,69 @@
+####################################################    
+########### SETUP PYTORCH AND LOCAL USER ###########
+####################################################
+FROM rocm/dev-ubuntu-22.04:5.7.1-complete AS rocm-pytorch
+
+# Set arguments
+ARG ROCM_VERSION=5.7
+ARG AMDGPU_VERSION=5.7
+ARG TORCH_VERSION=2.0.1
+
+# Copy sudoers file for passwordless sudo
+# Create rocm-user
+# Set environment variables and switch to rocm-user
+COPY sudo-nopasswd /etc/sudoers.d/sudo-nopasswd
+RUN useradd --create-home -G sudo,video --shell /bin/bash rocm-user
+USER rocm-user
+WORKDIR /home/rocm-user
+ENV PATH="${PATH}:/opt/rocm/bin"
+
+# Install necessary packages
+RUN sudo apt update -y && sudo DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
+    curl sudo libelf1 libnuma-dev build-essential git software-properties-common
+
+# Install python3.10 and setup pytorch
+RUN sudo apt update -y \
+    && sudo add-apt-repository ppa:deadsnakes/ppa \
+    && sudo apt update -y \
+    && sudo apt install python3.10 python3.10-venv python3.10-dev \
+    && sudo rm /usr/bin/python3 \
+    && sudo ln -s python3.10 /usr/bin/python3 \
+    && sudo ln -s python3.10 /usr/bin/python \
+    && curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
+
+ENV PATH="${PATH}:/home/rocm-user/.local/bin"
+RUN pip3 install --upgrade pip wheel \
+    && pip3 install torch==${TORCH_VERSION} torchaudio==${TORCH_VERSION} --index-url https://download.pytorch.org/whl/rocm${ROCM_VERSION} --no-cache-dir \
+    && sudo apt clean \
+    && sudo rm -rf /var/lib/apt/lists/*
+
+
+####################################################    
+############# SETUP VIRTUALVENV & TTS ##############
+####################################################    
+FROM rocm-pytorch AS TTS-webui
+    
+# Install NVM and Node.js
+USER rocm-user
+ENV NODE_VERSION=18.16.1
+ENV NVM_DIR=/home/rocm-user/.nvm
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash \
+    && . "${NVM_DIR}/nvm.sh" \ 
+    && nvm install ${NODE_VERSION} \
+    && . "${NVM_DIR}/nvm.sh" \
+    && nvm use v${NODE_VERSION} \
+    && . "${NVM_DIR}/nvm.sh" \
+    && nvm alias default v${NODE_VERSION} 
+ENV PATH="${NVM_DIR}/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+RUN node --version \
+    && npm --version
+
+# Set working directory for TTS-Generation-WebUI
+# Clone the TTS-Generation-WebUI repository
+# Set working directory to the cloned repo
+# Install all requirements
+WORKDIR /app
+RUN git clone https://github.com/beecave-homelab/tts-generation-webui-rocm.git
+WORKDIR /app/tts-generation-webui-rocm
+
+CMD python check_cuda.py

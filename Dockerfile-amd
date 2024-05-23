@@ -18,7 +18,7 @@ WORKDIR /home/rocm-user
 ENV PATH="${PATH}:/opt/rocm/bin"
 
 # Install python3.10 and setup pytorch
-RUN sudo apt update -y \
+RUN sudo apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     && sudo apt install software-properties-common -y \
     && sudo add-apt-repository ppa:deadsnakes/ppa \
     && sudo apt update -y \
@@ -27,7 +27,15 @@ RUN sudo apt update -y \
     && sudo ln -s python3.10 /usr/bin/python3 \
     && curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 \
     && pip3 install --upgrade pip wheel \
-    && pip3 install torch==${TORCH_VERSION} torchaudio==${TORCH_VERSION} --index-url https://download.pytorch.org/whl/rocm${ROCM_VERSION}
+    && pip3 install torch==${TORCH_VERSION} torchaudio==${TORCH_VERSION} --index-url https://download.pytorch.org/whl/rocm${ROCM_VERSION} --no-cache-dir \
+    && sudo apt-get clean \
+    && sudo rm -rf /var/lib/apt/lists/*
+
+# Install necessary packages
+RUN sudo apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    curl sudo libelf1 libnuma-dev build-essential git \
+    && sudo apt-get clean \
+    && sudo rm -rf /var/lib/apt/lists/*
 
 ####################################################    
 ############# SETUP VIRTUALVENV & TTS ##############

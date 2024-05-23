@@ -28,3 +28,33 @@ RUN sudo apt update -y \
     && curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 \
     && pip3 install --upgrade pip wheel \
     && pip3 install torch==${TORCH_VERSION} torchaudio==${TORCH_VERSION} --index-url https://download.pytorch.org/whl/rocm${ROCM_VERSION}
+
+####################################################    
+############# SETUP VIRTUALVENV & TTS ##############
+####################################################    
+FROM rocm-pytorch AS TTS-webui
+    
+# Install NVM and Node.js
+USER rocm-user
+ENV NODE_VERSION=18.16.1
+ENV NVM_DIR=/home/rocm-user/.nvm
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash \
+    && . "${NVM_DIR}/nvm.sh" \ 
+    && nvm install ${NODE_VERSION} \
+    && . "${NVM_DIR}/nvm.sh" \
+    && nvm use v${NODE_VERSION} \
+    && . "${NVM_DIR}/nvm.sh" \
+    && nvm alias default v${NODE_VERSION} 
+ENV PATH="${NVM_DIR}/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+RUN node --version \
+    && npm --version
+
+# Set working directory for TTS-Generation-WebUI
+# Clone the TTS-Generation-WebUI repository
+# Set working directory to the cloned repo
+# Install all requirements
+WORKDIR /app
+RUN git clone https://github.com/beecave-homelab/tts-generation-webui-rocm.git
+WORKDIR /app/tts-generation-webui-rocm
+
+CMD python check_cuda.py

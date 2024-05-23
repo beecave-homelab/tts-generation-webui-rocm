@@ -4,8 +4,8 @@
 FROM ubuntu:22.04 AS rocm
 
 # Set arguments
-ARG ROCM_VERSION=6.1.1
-ARG AMDGPU_VERSION=6.1.1
+ARG ROCM_VERSION=6.0
+ARG AMDGPU_VERSION=6.0
 ARG TORCH_VERSION=2.3.0
 
 # Install necessary packages and add ROCm and AMDGPU repositories

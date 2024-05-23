@@ -66,4 +66,5 @@ WORKDIR /app
 RUN git clone https://github.com/beecave-homelab/tts-generation-webui-rocm.git
 WORKDIR /app/tts-generation-webui-rocm
 
-CMD python check_cuda.py
+EXPOSE 3000
+CMD python3 check_cuda.py

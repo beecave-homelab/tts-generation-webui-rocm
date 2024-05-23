@@ -7,9 +7,10 @@ FROM ubuntu:22.04 AS rocm
 ARG ROCM_VERSION=6.1.1
 ARG AMDGPU_VERSION=6.1.1
 ARG TORCH_VERSION=2.3.0
+ENV UNAME=$(uname -r)
 
 # Install necessary packages and add ROCm and AMDGPU repositories
-RUN apt install "linux-headers-$(uname -r)" "linux-modules-extra-$(uname -r)" \
+RUN apt install -y "linux-headers-${UNAME}" "linux-modules-extra-${UNAME}" \
     && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     wget ca-certificates curl gnupg sudo libelf1 libnuma-dev build-essential git vim-nox cmake-curses-gui kmod file \
     && wget https://repo.radeon.com/amdgpu-install/${AMDGPU_VERSION}/ubuntu/jammy/amdgpu-install_6.1.60101-1_all.deb \

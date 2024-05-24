@@ -8,6 +8,10 @@ ARG ROCM_VERSION=6.0
 ARG AMDGPU_VERSION=6.0
 ARG TORCH_VERSION=2.3.0
 
+# Install necessary packages
+RUN apt update -y && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
+    curl sudo libelf1 libnuma-dev build-essential git software-properties-common
+
 # Copy sudoers file for passwordless sudo
 # Create rocm-user
 # Set environment variables and switch to rocm-user
@@ -16,10 +20,6 @@ RUN useradd --create-home -G sudo,video --shell /bin/bash rocm-user
 USER rocm-user
 WORKDIR /home/rocm-user
 ENV PATH="${PATH}:/opt/rocm/bin"
-
-# Install necessary packages
-RUN sudo apt update -y && sudo DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
-    curl sudo libelf1 libnuma-dev build-essential git software-properties-common
 
 # Install python3.10 and setup pytorch
 RUN sudo apt update -y \
@@ -37,35 +37,20 @@ RUN pip3 install --upgrade pip wheel \
     && sudo apt clean \
     && sudo rm -rf /var/lib/apt/lists/*
 
-
 ####################################################    
 ############# SETUP VIRTUALVENV & TTS ##############
 ####################################################    
 FROM rocm-pytorch AS TTS-webui
-    
-# Install NVM and Node.js
-USER root
-WORKDIR /root
-ENV NODE_VERSION=18.16.1
-RUN apt-get update && apt install -y curl \
-    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-ENV NVM_DIR=/root/.nvm
-RUN . "$NVM_DIR/nvm.sh" \
-    && nvm install ${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" \
-    && nvm use v${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" \
-    && nvm alias default v${NODE_VERSION}
-ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
-RUN node --version \
-    && npm --version
+
+# Copy Node binary to from NodeJs base image.
+ARG NODE_VERSION=18.16.1
+COPY --from=node:${NODE_VERSION}-slim /usr/local/bin /usr/local/bin
 
 # Set working directory for TTS-Generation-WebUI
 # Clone the TTS-Generation-WebUI repository
 # Set working directory to the cloned repo
 # Install all requirements
 USER rocm-user
-RUN mkdir /home/rocm-user/app
 WORKDIR /home/rocm-user/app
 RUN git clone https://github.com/beecave-homelab/tts-generation-webui-rocm.git
 WORKDIR /home/rocm-user/app/tts-generation-webui-rocm

@@ -43,8 +43,7 @@ RUN pip3 install --upgrade pip wheel \
 FROM rocm-pytorch AS TTS-webui
 
 # Copy Node binary to from NodeJs base image.
-ENV NODE_VERSION=18.16.1
-COPY --from=node:${NODE_VERSION}-slim /usr/local/bin /usr/local/bin
+COPY --from=node:18.16.1-slim /usr/local/bin /usr/local/bin
 
 # Set working directory for TTS-Generation-WebUI
 # Clone the TTS-Generation-WebUI repository

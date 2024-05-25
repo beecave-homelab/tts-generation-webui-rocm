@@ -44,13 +44,10 @@ RUN pip3 install --upgrade pip wheel \
 ####################################################    
 FROM rocm-pytorch AS TTS-webui
 
-USER rocm-user
-WORKDIR /home/rocm-user/
-
 # Install Node.Js
 ENV NODE_VERSION=18.16.1
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | sudo bash
-ENV NVM_DIR=/home/rocm-user/.nvm
+ENV NVM_DIR=/root/.nvm
 RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
 RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
 RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
@@ -62,6 +59,7 @@ RUN npm --version
 # Clone the TTS-Generation-WebUI repository
 # Set working directory to the cloned repo
 # Install all requirements
+USER rocm-user
 WORKDIR /home/rocm-user/app
 RUN git clone https://github.com/beecave-homelab/tts-generation-webui-rocm.git
 WORKDIR /home/rocm-user/app/tts-generation-webui-rocm

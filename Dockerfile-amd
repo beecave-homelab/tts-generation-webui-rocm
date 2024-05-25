@@ -1,12 +1,7 @@
-####################################################    
-########### SETUP PYTORCH AND LOCAL USER ###########
-####################################################
-FROM rocm/dev-ubuntu-22.04:6.1.1-complete AS rocm
-
-# Set arguments
-ARG ROCM_VERSION=6.0
-ARG AMDGPU_VERSION=6.0
-ARG TORCH_VERSION=2.3.0
+#################################################
+############### SETUP PYTHON3.10  ###############
+#################################################
+FROM rocm/pytorch:rocm6.1.1_ubuntu22.04_py3.10_pytorch_release-2.1.2 AS rocm-pytorch
 
 # Install necessary packages
 RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -19,46 +14,15 @@ RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-
 # Set environment variables and switch to rocm-user
 COPY sudo-nopasswd /etc/sudoers.d/sudo-nopasswd
 RUN useradd --create-home -G sudo,video --shell /bin/bash rocm-user
-USER rocm-user
-WORKDIR /home/rocm-user
-ENV PATH="${PATH}:/opt/rocm/bin"
-
-#################################################
-############### SETUP PYTHON3.10  ###############
-#################################################
-FROM rocm AS rocm-pytorch
-
-USER rocm-user
-WORKDIR /home/rocm-user
-
-# Install python3.10
-RUN sudo apt-get update -y \
-    && sudo add-apt-repository ppa:deadsnakes/ppa \
-    && sudo apt-get update -y \
-    && sudo apt-get install python3.10 python3.10-venv python3.10-dev \
-    && sudo rm /usr/bin/python3 \
-    && sudo ln -s python3.10 /usr/bin/python3 \
-    && sudo ln -s python3.10 /usr/bin/python \
-    && curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
-
-# Install and setup pytorch 
-ENV PATH="${PATH}:/home/rocm-user/.local/bin"
-RUN pip3 install --upgrade pip wheel \
-    && pip3 install torch==${TORCH_VERSION} torchaudio==${TORCH_VERSION} --index-url https://download.pytorch.org/whl/rocm${ROCM_VERSION} --no-cache-dir \
-    && sudo apt-get clean \
-    && sudo rm -rf /var/lib/apt-get/lists/*
 
 ####################################################    
 ############# SETUP VIRTUALVENV & TTS ##############
 ####################################################    
 FROM rocm-pytorch AS TTS-webui
 
-USER root
-WORKDIR /root
-
 # Install Node.Js
 ENV NODE_VERSION=18.16.1
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | sudo bash
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 ENV NVM_DIR=/root/.nvm
 RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
 RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}

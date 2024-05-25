@@ -44,14 +44,17 @@ RUN pip3 install --upgrade pip wheel \
 ####################################################    
 FROM rocm-pytorch AS TTS-webui
 
-USER rocm-user
-WORKDIR /home/rocm-user/
+USER root
+WORKDIR /root
 
 # Install Node.Js
-RUN sudo curl -sL https://deb.nodesource.com/setup_18.16.1 | bash - \
-    && sudo apt-get update && sudo apt-get install -y nodejs npm \
-    && sudo apt clean \
-    && sudo rm -rf /var/lib/apt/lists/*
+RUN curl -sL https://deb.nodesource.com/setup_18.16.1 | bash - \
+    && apt update && apt install -y nodejs npm \
+    && apt clean \
+    && rm -rf /var/lib/apt/lists/*
+
+USER rocm-user
+WORKDIR /home/rocm-user/
 
 # Set working directory for TTS-Generation-WebUI
 # Clone the TTS-Generation-WebUI repository

@@ -1,7 +1,7 @@
 ####################################################    
 ########### SETUP PYTORCH AND LOCAL USER ###########
 ####################################################
-FROM rocm/dev-ubuntu-22.04:6.1.1-complete AS rocm-pytorch
+FROM rocm/dev-ubuntu-22.04:6.1.1-complete AS rocm
 
 # Set arguments
 ARG ROCM_VERSION=6.0
@@ -23,7 +23,15 @@ USER rocm-user
 WORKDIR /home/rocm-user
 ENV PATH="${PATH}:/opt/rocm/bin"
 
-# Install python3.10 and setup pytorch
+#################################################
+############### SETUP PYTHON3.10  ###############
+#################################################
+FROM rocm AS rocm-pytorch
+
+USER rocm-user
+WORKDIR /home/rocm-user
+
+# Install python3.10
 RUN sudo apt-get update -y \
     && sudo add-apt-repository ppa:deadsnakes/ppa \
     && sudo apt-get update -y \
@@ -33,6 +41,7 @@ RUN sudo apt-get update -y \
     && sudo ln -s python3.10 /usr/bin/python \
     && curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 
+# Install and setup pytorch 
 ENV PATH="${PATH}:/home/rocm-user/.local/bin"
 RUN pip3 install --upgrade pip wheel \
     && pip3 install torch==${TORCH_VERSION} torchaudio==${TORCH_VERSION} --index-url https://download.pytorch.org/whl/rocm${ROCM_VERSION} --no-cache-dir \
@@ -62,10 +71,9 @@ RUN npm --version
 # Clone the TTS-Generation-WebUI repository
 # Set working directory to the cloned repo
 # Install all requirements
-USER rocm-user
-WORKDIR /home/rocm-user/app
+WORKDIR /root/app
 RUN git clone https://github.com/beecave-homelab/tts-generation-webui-rocm.git
-WORKDIR /home/rocm-user/app/tts-generation-webui-rocm
+WORKDIR /root/app/tts-generation-webui-rocm
 
 EXPOSE 3000
 CMD python3 check_cuda.py

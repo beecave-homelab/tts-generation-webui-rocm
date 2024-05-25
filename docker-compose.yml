@@ -8,11 +8,17 @@ services:
     ports:
       - "7860:7860"
       - "3000:3000"
-    container_name: tts-generation-webui
     devices:
       - "/dev/kfd:/dev/kfd"
       - "/dev/dri:/dev/dri"
+    stdin_open: true
+    tty: true
+    cap_add:
+      - SYS_PTRACE
+    command: "/bin/bash"
     security_opt:
       - seccomp=unconfined
     group_add:
       - video
+    ipc: host
+    shm_size: 8G

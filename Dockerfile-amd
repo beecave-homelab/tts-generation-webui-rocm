@@ -48,7 +48,7 @@ USER root
 WORKDIR /root
 
 # Install Node.Js
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_18.6.1 | bash - && \
     apt update && apt install -y nodejs npm
 
 USER rocm-user

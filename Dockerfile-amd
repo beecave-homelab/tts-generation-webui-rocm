@@ -48,10 +48,8 @@ USER root
 WORKDIR /root
 
 # Install Node.Js
-RUN curl -sL https://deb.nodesource.com/setup_18.16.1 | bash - \
-    && apt update && apt install -y nodejs npm \
-    && apt clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+    apt update && apt install -y nodejs npm
 
 USER rocm-user
 WORKDIR /home/rocm-user/

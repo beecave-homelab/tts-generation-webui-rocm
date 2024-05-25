@@ -25,7 +25,7 @@ ENV PATH="${PATH}:/opt/rocm/bin"
 
 # Install python3.10 and setup pytorch
 RUN sudo apt-get update -y \
-    && sudo add-apt-get-repository ppa:deadsnakes/ppa \
+    && sudo add-apt-repository ppa:deadsnakes/ppa \
     && sudo apt-get update -y \
     && sudo apt-get install python3.10 python3.10-venv python3.10-dev \
     && sudo rm /usr/bin/python3 \
@@ -44,15 +44,20 @@ RUN pip3 install --upgrade pip wheel \
 ####################################################    
 FROM rocm-pytorch AS TTS-webui
 
-USER root
-WORKDIR /root
-
-# Install Node.Js
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get update && apt-get install -y nodejs npm
-
 USER rocm-user
 WORKDIR /home/rocm-user/
+
+# Install Node.Js
+ENV NODE_VERSION=18.16.1
+ENV NVM_DIR=/home/rocm-user/.nvm
+RUN apt install -y curl
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | sudo bash
+RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
+ENV PATH="$NVM_DIR/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+RUN node --version
+RUN npm --version
 
 # Set working directory for TTS-Generation-WebUI
 # Clone the TTS-Generation-WebUI repository

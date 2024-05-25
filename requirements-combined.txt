@@ -1,0 +1,75 @@
+# Contents of /Users/elvee/Nextcloud/Projects/tts-generation-webui-rocm/requirements_rvc.txt
+torch==2.0.0 # BSD 3-Clause - ensures torch is not reinstalled
+rvc_pkg @ git+https://github.com/rsxdalv/rvc_pkg#egg=rvc_pkg # MIT License
+
+
+# Contents of /Users/elvee/Nextcloud/Projects/tts-generation-webui-rocm/requirements.txt
+safetensors==0.3.1 # Until they fix it
+torch==2.0.0 # BSD 3-Clause - ensures torch is not reinstalled
+ffmpeg-python # Apache 2.0
+gradio==3.48.0
+python-dotenv==1.0.0
+soundfile==0.12.1; sys_platform == 'win32' # torchaudio
+# sox # torchaudio for linux
+suno-bark @ git+https://github.com/rsxdalv/bark@0d91823ead3d87c317f12d01d325fca9408c669e#egg=suno-bark # MIT License
+vocos==0.1.0 # MIT License
+tortoise-tts @ git+https://github.com/rsxdalv/tortoise-tts@e4711433b12bcd1086840649e1830ad5c3fa1a76#egg=tortoise-tts # Apache 2.0
+beartype>=0.16.1
+transformers==4.36.1 
+iso639-lang==2.2.3
+
+
+# Contents of /Users/elvee/Nextcloud/Projects/tts-generation-webui-rocm/requirements_vall_e.txt
+torch==2.0.0 # BSD 3-Clause - ensures torch is not reinstalled
+valle-x @ git+https://github.com/rsxdalv/VALL-E-X@f423d779e2015c11526f037de48210576820ed3a#egg=valle-x # MIT License
+
+
+# Contents of /Users/elvee/Nextcloud/Projects/tts-generation-webui-rocm/requirements_maha_tts.txt
+torch==2.0.0 # BSD 3-Clause - ensures torch is not reinstalled
+maha-tts @ git+https://github.com/dubverse-ai/MahaTTS.git@e6680df225a99367e070c0090dd564bc74647e23 # Apache 2.0
+
+
+# Contents of /Users/elvee/Nextcloud/Projects/tts-generation-webui-rocm/requirements_audiocraft_only.txt
+audiocraft @ git+https://git@github.com/facebookresearch/audiocraft@905371a779f608169353fe6ad42bb5fc10c5c9a8#egg=audiocraft # MIT License
+
+
+# Contents of /Users/elvee/Nextcloud/Projects/tts-generation-webui-rocm/requirements_audiocraft_deps.txt
+torch==2.0.0 # BSD 3-Clause - ensures torch is not reinstalled
+xformers==0.0.19 # For torch==2.0.0 project plane
+# please make sure you have already a pytorch install that is cuda enabled!
+av
+einops
+flashy>=0.0.1
+hydra-core>=1.1
+hydra_colorlog
+julius
+num2words
+numpy
+sentencepiece
+spacy>=3.6.1
+# torch==2.1.0 # wrong torch version
+torchaudio>=2.0.0
+huggingface_hub
+tqdm
+transformers>=4.31.0  # need Encodec there.
+xformers
+demucs
+librosa
+gradio
+torchmetrics
+encodec
+protobuf
+
+
+# Contents of /Users/elvee/Nextcloud/Projects/tts-generation-webui-rocm/requirements_styletts2.txt
+torch==2.0.0 # BSD 3-Clause - ensures torch is not reinstalled
+styletts2 @ git+https://github.com/rsxdalv/StyleTTS2@cc36a19610df42123230237a73e798d4fdd3dcb8#egg=styletts2 # MIT License
+
+
+# Contents of /Users/elvee/Nextcloud/Projects/tts-generation-webui-rocm/requirements_bark_hubert_quantizer.txt
+torch==2.0.0 # BSD 3-Clause - ensures torch is not reinstalled
+# pre-install fairseq for bark_hubert_quantizer
+fairseq @ https://github.com/Sharrnah/fairseq/releases/download/v0.12.4/fairseq-0.12.4-cp310-cp310-win_amd64.whl ; sys_platform == 'win32' # MIT License
+bark_hubert_quantizer @ git+https://github.com/rsxdalv/bark-voice-cloning-HuBERT-quantizer@bark_hubert_quantizer#egg=bark_hubert_quantizer # MIT License
+
+

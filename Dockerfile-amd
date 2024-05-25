@@ -10,7 +10,9 @@ ARG TORCH_VERSION=2.3.0
 
 # Install necessary packages
 RUN apt update -y && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
-    curl sudo libelf1 libnuma-dev build-essential git software-properties-common
+    git nano curl sudo libelf1 libnuma-dev build-essential git software-properties-common gcc g++ ffmpeg \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy sudoers file for passwordless sudo
 # Create rocm-user
@@ -42,14 +44,19 @@ RUN pip3 install --upgrade pip wheel \
 ####################################################    
 FROM rocm-pytorch AS TTS-webui
 
-# Copy Node binary to from NodeJs base image.
-COPY --from=node:18.16.1-slim /usr/local/bin /usr/local/bin
+USER rocm-user
+WORKDIR /home/rocm-user/
+
+# Install Node.Js
+RUN curl -sL https://deb.nodesource.com/setup_18.16.1 | bash - && \
+    apt-get update && apt-get install -y nodejs npm \
+    && sudo apt clean \
+    && sudo rm -rf /var/lib/apt/lists/*
 
 # Set working directory for TTS-Generation-WebUI
 # Clone the TTS-Generation-WebUI repository
 # Set working directory to the cloned repo
 # Install all requirements
-USER rocm-user
 WORKDIR /home/rocm-user/app
 RUN git clone https://github.com/beecave-homelab/tts-generation-webui-rocm.git
 WORKDIR /home/rocm-user/app/tts-generation-webui-rocm

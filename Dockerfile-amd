@@ -9,12 +9,6 @@ RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy sudoers file for passwordless sudo
-# Create rocm-user
-# Set environment variables and switch to rocm-user
-COPY sudo-nopasswd /etc/sudoers.d/sudo-nopasswd
-RUN useradd --create-home -G sudo,video --shell /bin/bash rocm-user
-
 ####################################################    
 ############# SETUP VIRTUALVENV & TTS ##############
 ####################################################    

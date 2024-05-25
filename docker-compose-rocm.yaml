@@ -1,0 +1,19 @@
+services:
+  tts-generation-webui:
+    image: rocm/pytorch:rocm6.1.1_ubuntu22.04_py3.10_pytorch_release-2.1.2
+    restart: unless-stopped
+    container_name: tts-generation-webui
+    devices:
+      - "/dev/kfd:/dev/kfd"
+      - "/dev/dri:/dev/dri"
+    stdin_open: true
+    tty: true
+    cap_add:
+      - SYS_PTRACE
+    command: "/bin/bash"
+    security_opt:
+      - seccomp=unconfined
+    group_add:
+      - video
+    ipc: host
+    shm_size: 8G

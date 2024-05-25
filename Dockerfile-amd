@@ -48,8 +48,8 @@ USER rocm-user
 WORKDIR /home/rocm-user/
 
 # Install Node.Js
-RUN curl -sL https://deb.nodesource.com/setup_18.16.1 | bash - && \
-    sudo apt-get update && sudo apt-get install -y nodejs npm \
+RUN curl -sL https://deb.nodesource.com/setup_18.16.1 | bash - \
+    && sudo apt-get update && sudo apt-get install -y nodejs npm \
     && sudo apt clean \
     && sudo rm -rf /var/lib/apt/lists/*
 

@@ -11,7 +11,7 @@ ARG TORCH_VERSION=2.3.0
 # Install necessary packages
 RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     git nano curl sudo libelf1 libnuma-dev build-essential git software-properties-common gcc g++ ffmpeg \
-    && apt-get-get clean \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy sudoers file for passwordless sudo

@@ -44,6 +44,9 @@ RUN pip3 install --upgrade pip wheel \
 ####################################################    
 FROM rocm-pytorch AS TTS-webui
 
+USER root
+WORKDIR /root
+
 # Install Node.Js
 ENV NODE_VERSION=18.16.1
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | sudo bash

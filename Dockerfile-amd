@@ -50,7 +50,6 @@ WORKDIR /home/rocm-user/
 # Install Node.Js
 ENV NODE_VERSION=18.16.1
 ENV NVM_DIR=/home/rocm-user/.nvm
-RUN apt install -y curl
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | sudo bash
 RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
 RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}

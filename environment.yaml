@@ -1,5 +1,3 @@
-# environment.yml
-
 name: tts-generation-webui
 channels:
   - defaults

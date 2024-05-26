@@ -94,4 +94,4 @@ RUN cd react-ui \
     && npm install \
     && npm run build
 EXPOSE 3001
-CMD python server.py
+CMD ["python3", "server.py"]

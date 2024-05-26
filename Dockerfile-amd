@@ -34,7 +34,7 @@ USER root
 COPY environment.yaml .
 
 # Create the conda environment and activate it
-RUN conda create -n tts-generation-webui -f environment.yaml \
+RUN conda env create -f environment.yaml \
     && echo "source activate tts-generation-webui" > ~/.bashrc
 
 # Add conda environment to PATH

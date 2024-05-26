@@ -89,10 +89,10 @@ RUN /root/miniconda3/envs/tts-generation-webui/bin/pip install -r requirements.t
 # RUN /root/miniconda3/envs/tts-generation-webui/bin/pip install -r requirements_vall_e.txt --no-cache-dir
 # RUN /root/miniconda3/envs/tts-generation-webui/bin/pip install -r requirements_maha_tts.txt --no-cache-dir
 
-# Add React webui (testing)
+
+ENV HSA_OVERRIDE_GFX_VERSION=10.3.0
 RUN cd react-ui \
     && npm install \
     && npm run build
-
-# Run the server
+EXPOSE 3000
 CMD python server.py

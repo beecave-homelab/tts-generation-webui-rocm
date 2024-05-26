@@ -3,43 +3,55 @@
 #################################################
 FROM rocm/dev-ubuntu-22.04:5.7 AS rocm
 
+# Login as root user.    
 USER root
 
+# Install dependencies and rocm-5.7
 RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \ 
     wget git rocsparse-dev hipsparse-dev rocthrust-dev rocblas-dev hipblas-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Add the conda to PATH 
 ENV PATH="/root/miniconda3/bin:${PATH}"
 ARG PATH="/root/miniconda3/bin:${PATH}"
 
+# Install and setup MiniConda
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && mkdir .conda \
     && bash Miniconda3-latest-Linux-x86_64.sh -b \
     && rm -f Miniconda3-latest-Linux-x86_64.sh
 
 ####################################################
-############# SETUP VIRTUALVENV & TTS ##############
+############## SETUP CONDA & PYTORCH ###############
 ####################################################
 FROM rocm AS rocm-pytorch
 
+# Login as root user.    
 USER root
-    
-RUN conda init bash
 
-RUN pip install --upgrade pip \
-    && pip install --upgrade numpy setuptools wheel ninja packaging \
-    && pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.7
+# Create the conda environment and activate it
+RUN conda create -n tts-generation-webui environment.yaml \
+    && echo "source activate tts-generation-webui" > ~/.bashrc
+
+# Add conda environment to PATH
+ENV PATH /root/miniconda3/envs/tts-generation-webui/bin:$PATH
+
+# Ensure the environment is activated by default when running the container
+SHELL ["conda", "run", "-n", "tts-generation-webui", "/bin/bash", "-c"]
+
+# Install specific packages using pip
+RUN /root/miniconda3/envs/tts-generation-webui/bin/pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.7
 
 ####################################################
-############# SETUP VIRTUALVENV & TTS ##############
+########### SETUP TTS-GENERATION-WEBUI #############
 ####################################################
 FROM rocm-pytorch AS TTS-webui
 
+# Login as root user.    
 USER root
-RUN conda init bash
 
-# Install necessary packages
+# Install all requirements
 RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     git nano curl sudo libelf1 libnuma-dev build-essential git software-properties-common gcc g++ ffmpeg \
     && apt-get clean \
@@ -59,15 +71,15 @@ ENV PATH="$NVM_DIR/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 RUN node --version \
     && npm --version
 
-# Set working directory for TTS-Generation-WebUI
-# Clone the TTS-Generation-WebUI repository
-# Set working directory to the cloned repo
-# Install all requirements
+# Clone the TTS-Generation-WebUI repository and change the current directory
 WORKDIR /root/app
 RUN git clone https://github.com/beecave-homelab/tts-generation-webui-rocm.git --branch rocm-5.7 --single-branch
 WORKDIR /root/app/tts-generation-webui-rocm
-# RUN git checkout rocm-5.7 \
-    # && conda init bash
 
-EXPOSE 3000
-CMD python3 check_cuda.py
+# Add React webui (testing)
+RUN cd react-ui \
+    && npm install \
+    && npm run build
+
+# Run the server
+CMD python server.py

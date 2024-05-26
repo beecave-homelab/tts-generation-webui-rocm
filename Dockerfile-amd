@@ -93,5 +93,5 @@ ENV HSA_OVERRIDE_GFX_VERSION=10.3.0
 RUN cd react-ui \
     && npm install \
     && npm run build
-EXPOSE 3000
+EXPOSE 3001
 CMD python server.py

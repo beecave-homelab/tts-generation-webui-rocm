@@ -3,7 +3,7 @@
 #################################################
 FROM rocm/dev-ubuntu-22.04:5.7 AS rocm
 
-
+USER root
 
 RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \ 
     wget git rocsparse-dev hipsparse-dev rocthrust-dev rocblas-dev hipblas-dev \

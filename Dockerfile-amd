@@ -1,7 +1,32 @@
 #################################################
-############### SETUP PYTHON3.10  ###############
+######### SETUP ROCM-5.7 and MiniConda  #########
 #################################################
-FROM rocm/pytorch:rocm5.7_ubuntu22.04_py3.10_pytorch_2.0.1 AS rocm-pytorch
+FROM rocm/dev-ubuntu-22.04:5.7 AS rocm-pytorch 
+
+RUN apt update && \
+    apt install -y wget \
+    git \
+    rocsparse-dev \
+    hipsparse-dev \
+    rocthrust-dev \
+    rocblas-dev \
+    hipblas-dev && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+ENV PATH="/root/miniconda3/bin:${PATH}"
+ARG PATH="/root/miniconda3/bin:${PATH}"
+
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && mkdir .conda \
+    && bash Miniconda3-latest-Linux-x86_64.sh -b \
+    && rm -f Miniconda3-latest-Linux-x86_64.sh
+
+RUN conda init bash
+
+RUN pip install --upgrade pip \
+    && pip install --upgrade numpy setuptools wheel ninja packaging \
+    && pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.7
 
 # Install necessary packages
 RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \

@@ -63,7 +63,7 @@ RUN node --version \
 # Set working directory to the cloned repo
 # Install all requirements
 WORKDIR /root/app
-RUN git clone https://github.com/beecave-homelab/tts-generation-webui-rocm:rocm-5.7
+RUN git clone https://github.com/beecave-homelab/tts-generation-webui-rocm.git --branch rocm-5.7 --single-branch
 WORKDIR /root/app/tts-generation-webui-rocm
 RUN git checkout rocm-5.7 \
     && conda init bash

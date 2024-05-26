@@ -31,7 +31,7 @@ FROM rocm AS rocm-pytorch
 USER root
 
 # Copy the environment.yaml file to create conda environment
-COPY environment.yml .
+COPY environment.yaml .
 
 # Create the conda environment and activate it
 RUN conda create -n tts-generation-webui environment.yaml \

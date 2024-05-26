@@ -1,18 +1,14 @@
 #################################################
 ######### SETUP ROCM-5.7 and MiniConda  #########
 #################################################
-FROM rocm/dev-ubuntu-22.04:5.7 AS rocm-pytorch 
+FROM rocm/dev-ubuntu-22.04:5.7 AS rocm
 
-RUN apt update && \
-    apt install -y wget \
-    git \
-    rocsparse-dev \
-    hipsparse-dev \
-    rocthrust-dev \
-    rocblas-dev \
-    hipblas-dev && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+USER root
+
+RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \ 
+    wget git rocsparse-dev hipsparse-dev rocthrust-dev rocblas-dev hipblas-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENV PATH="/root/miniconda3/bin:${PATH}"
 ARG PATH="/root/miniconda3/bin:${PATH}"
@@ -22,22 +18,31 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && bash Miniconda3-latest-Linux-x86_64.sh -b \
     && rm -f Miniconda3-latest-Linux-x86_64.sh
 
+####################################################
+############# SETUP VIRTUALVENV & TTS ##############
+####################################################
+FROM rocm AS rocm-pytorch
+
+USER root
+    
 RUN conda init bash
 
 RUN pip install --upgrade pip \
     && pip install --upgrade numpy setuptools wheel ninja packaging \
     && pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.7
 
+####################################################
+############# SETUP VIRTUALVENV & TTS ##############
+####################################################
+FROM rocm-pytorch AS TTS-webui
+
+USER root
+
 # Install necessary packages
 RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     git nano curl sudo libelf1 libnuma-dev build-essential git software-properties-common gcc g++ ffmpeg \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-####################################################
-############# SETUP VIRTUALVENV & TTS ##############
-####################################################
-FROM rocm-pytorch AS TTS-webui
 
 # Install Node.Js
 ENV NODE_VERSION=18.16.1
